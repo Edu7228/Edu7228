@@ -1,0 +1,54 @@
+===============================================================================================================
+DELIMITER //
+CREATE PROCEDURE spCadastrarFornecedor (
+    IN paCodFornecedor INT,
+    IN paRazaoSocial VARCHAR(100),
+    IN paPaisOrigem VARCHAR(500)
+)
+BEGIN
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        SELECT 'ERRO' AS Retorno;
+    END;
+    START TRANSACTION;
+		INSERT INTO Fornecedor (CodFornecedor, RazaoSocial, PaisOrigem) 
+			VALUES(paCodFornecedor, paRazaoSocial, paPaisOrigem);
+    COMMIT;
+END //
+SELECT 'SUCESSO' AS Retorno;
+DELIMITER ;
+
+=================================================================================================================
+
+
+DELIMITER //
+CREATE PROCEDURE spConsultarFornecedor()
+BEGIN
+	START TRANSACTION;
+		SELECT Forc.CodFornecedor, Forc.RazaoSocial, Forc.PaisOrigem 
+        	FROM Fornecedor AS Forc 
+        	ORDER BY Forc.RazaoSocial; 
+    COMMIT;
+END //
+DELIMITER ;
+=====================================================================================================================
+
+DELIMITER //
+CREATE PROCEDURE spExcluirFornecedor (
+	IN paCodigo INT
+)
+BEGIN
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+	ROLLBACK;
+        SELECT 'ERRO' AS Retorno;
+    END;
+    START TRANSACTION;
+    	DELETE FROM Fornecedor
+        WHERE CodFornecedor = paCodigo;
+    COMMIT;
+END //
+SELECT 'SUCESSO' AS Retorno;
+DELIMITER ;
+=======================================================================================================================
